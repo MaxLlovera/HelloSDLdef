@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <iostream>
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+//const int SCREEN_WIDTH = 640;
+//const int SCREEN_HEIGHT = 480;
 
 
 void logSDLError(std::ostream& os, const std::string& msg) {
@@ -15,7 +15,7 @@ void logSDLError(std::ostream& os, const std::string& msg) {
 void clear(SDL_Renderer* renderer) {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
 	SDL_RenderClear(renderer);
-	SDL_RenderPresent(renderer);
+	//SDL_RenderPresent(renderer);
 }
 
 void draw(SDL_Renderer* renderer, SDL_Rect* rect) {
@@ -24,48 +24,15 @@ void draw(SDL_Renderer* renderer, SDL_Rect* rect) {
 	SDL_RenderPresent(renderer);
 }
 
+void drawdisparo(SDL_Renderer* renderer, SDL_Rect* disparo) {
+	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+	SDL_RenderFillRect(renderer, disparo);
+	SDL_RenderPresent(renderer);
+}
+
 int main(int argc, char** argv) {
 
-	/*
-	SDL_Window* window;
-	SDL_Renderer* renderer;
-
-	// Initialize SDL.
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-		return 1;
-
-	// Create the window where we will draw.
-	window = SDL_CreateWindow("SDL_RenderClear",
-		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		512, 512,
-		0);
-
-	// We must call SDL_CreateRenderer in order for draw calls to affect this window.
-	renderer = SDL_CreateRenderer(window, -1, 0);
-
-	// Select the color for drawing. It is set to red here.
-	SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-
-	// Clear the entire screen to our selected color.
-	SDL_RenderClear(renderer);
-
-	
-
-	// Up until now everything was drawn behind the scenes.
-	// This will show the new, red contents of the window.
-	SDL_RenderPresent(renderer);
-
-	// Give us time to see the window.
-	SDL_Delay(5000);
-
-	// Always be sure to clean up
-	SDL_Quit();
-
-
-	system("pause");
-	return 0;
-	*/
-
+	bool disparant = false;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 
@@ -98,6 +65,12 @@ int main(int argc, char** argv) {
 	rectangle.w = 50;
 	rectangle.h = 50;
 
+	SDL_Rect disparo;
+	disparo.x = 40;
+	disparo.y = 10;
+	disparo.w = 40;
+	disparo.h = 10;
+
 	clear(renderer);
 
 	int quit = 0;
@@ -108,31 +81,43 @@ int main(int argc, char** argv) {
 				// Handle arrow keys
 				switch (event.key.keysym.scancode) {
 				case SDL_SCANCODE_LEFT:
-					rectangle.x -= 10;
+					rectangle.x -= 20;
 					break;
 				case SDL_SCANCODE_RIGHT:
-					rectangle.x += 10;
+					rectangle.x += 20;
 					break;
 				case SDL_SCANCODE_UP:
-					rectangle.y -= 10;
+					rectangle.y -= 20;
 					break;
 				case SDL_SCANCODE_DOWN:
-					rectangle.y += 10;
+					rectangle.y += 20;
 					break;
+				case SDL_SCANCODE_SPACE:
+					disparant = true;
+
 				default:
 					break;
 				}
 
 			}
+			
+			
+			
 			else if (event.type == SDL_QUIT) {
 				quit = 1;
 				puts("QUIT!");
 				break;
 			}
 		}
+		if (disparant) {
+			drawdisparo(renderer, &disparo);
+			disparo.x++;
+	
+		}
 
 		clear(renderer);
 		draw(renderer, &rectangle);
+
 	}
 
 	SDL_DestroyRenderer(renderer);
